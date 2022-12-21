@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><mappingRoot xmlns="http://www.ibm.com/2008/ccl/Mapping" domainID="com.ibm.msl.mapping.xml" domainIDExtension="mb" mainMap="true" targetNamespace="default" version="8.0.5.0" xmlns:map="default">
+    <inlinedXMLSchema><![CDATA[<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"> 
+    <xsd:element name="element10" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element9" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element8" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element7" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element6" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element5" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element4" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element3" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element2" nillable="true" type="xsd:string"/> 
+    <xsd:element name="element1" nillable="true" type="xsd:string"/> 
+</xsd:schema>]]></inlinedXMLSchema>
+    <input path="/csv.xsd" var="var2"/>
+    <input inlinedXMLSchema="true" path="../schema_0.xsd" var="var1"/>
+    <output path="jar:file://!com/ibm/etools/mft/map/xsds/predefined/JsonDomainMsg.xsd" var="var"/>
+    <namespaces>
+        <namespace kind="supplement" prefix="out" uri="http://www.ibm.com/iib/msl/json"/>
+    </namespaces>
+    <generation engine="xquery"/>
+    <mappingDeclaration name="json_Mapping">
+        <input path="$var2/mb:msg(csv,assembly,DFDL,Properties)" var="ComIbmMessageAssembly_csv"/>
+        <output namespace="http://www.ibm.com/iib/msl/json" path="$var/mb:msg(JSON,assembly,JSON,Properties)" var="ComIbmMessageAssembly_JSON">
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/Data/type('anyType')" qualifier="{http://www.ibm.com/iib/msl/json}JSONObject" ref="var"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element1" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element2" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element3" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element4" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element5" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element6" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element7" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element8" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element9" ref="var1"/>
+            <cast castType="userDefined" path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)/any" qualifier="element10" ref="var1"/>
+        </output>
+        <move>
+            <input path="$ComIbmMessageAssembly_csv/Properties"/>
+            <output path="$ComIbmMessageAssembly_JSON/Properties"/>
+        </move>
+        <foreach>
+            <input path="$ComIbmMessageAssembly_csv/csv/record"/>
+            <output path="$ComIbmMessageAssembly_JSON/JSON/spath('Data',2)"/>
+            <move>
+                <input path="field1"/>
+                <output path="element1"/>
+            </move>
+            <move>
+                <input path="field2"/>
+                <output path="element2"/>
+            </move>
+            <move>
+                <input path="field3"/>
+                <output path="element3"/>
+            </move>
+            <move>
+                <input path="field4"/>
+                <output path="element4"/>
+            </move>
+            <move>
+                <input path="field5"/>
+                <output path="element5"/>
+            </move>
+            <move>
+                <input path="field6"/>
+                <output path="element6"/>
+            </move>
+            <move>
+                <input path="field7"/>
+                <output path="element7"/>
+            </move>
+            <move>
+                <input path="field8"/>
+                <output path="element8"/>
+            </move>
+            <move>
+                <input path="field9"/>
+                <output path="element9"/>
+            </move>
+            <move>
+                <input path="field10"/>
+                <output path="element10"/>
+            </move>
+        </foreach>
+    </mappingDeclaration>
+</mappingRoot>
