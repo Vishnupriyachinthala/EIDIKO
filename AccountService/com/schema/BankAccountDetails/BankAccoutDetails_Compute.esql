@@ -1,0 +1,50 @@
+BROKER SCHEMA com.schema.BankAccountDetails
+
+DECLARE soap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+DECLARE ns1 NAMESPACE 'http://fcubs.ofss.com/service/FCUBSAccService';
+
+CREATE COMPUTE MODULE BankAccoutDetails_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		 CALL CopyEntireMessage();
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		
+		
+		SET OutputRoot.XMLNSC.soap:Envelope.(XMLNSC.NamespaceDecl)xmlns:soap=soap;
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Header.(XMLNSC.NamespaceDecl)=NULL;
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.(XMLNSC.Attribute)xmlns:ns1=ns1;
+		
+		DECLARE inref REFERENCE TO InputRoot.JSON.Data;
+		
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:SOURCE='IBEXT1';
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:UBSCOMP='FCUBS';
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:MSGID=inref.QueryCustAcc.QUERYCUSTACC_IOFS_REQ.MSGID;
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:CORRELID=103422229;
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:USERID='IBEXTUSR';
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:BRANCH=inref.QueryCustAcc.QUERYCUSTACC_IOFS_REQ.BRANCH;
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:SERVICE='FCUBSAccService';
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:OPERATION=inref.QueryCustAcc.QUERYCUSTACC_IOFS_REQ.OPERATION;
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_HEADER.ns1:MSGSTAT=inref.QueryCustAcc.QUERYCUSTACC_IOFS_REQ.MSGSTAT;
+		
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_BODY.ns1:"Cust-Account-IO".ns1:BRN=inref.QueryCustAcc."Cust-Account-IO".BRN;
+		
+		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_BODY.ns1:"Cust-Account-IO".ns1:ACC=0002770250011;
+		
+	--	Set OutputRoot.XMLNSC.SOAP.Body= InputRoot.JSON.Data;
+	
+	END;
+END MODULE;

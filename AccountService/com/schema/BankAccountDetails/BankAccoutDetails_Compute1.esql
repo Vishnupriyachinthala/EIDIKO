@@ -1,0 +1,311 @@
+BROKER SCHEMA com.schema.BankAccountDetails
+
+DECLARE S NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
+DECLARE xmlns NAMESPACE 'http://fcubs.ofss.com/service/FCUBSAccService';
+
+CREATE COMPUTE MODULE BankAccoutDetails_Compute1
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		 CALL CopyEntireMessage();
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		DECLARE inrefheader REFERENCE TO InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_HEADER;
+		DECLARE inrefbody REFERENCE TO InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_BODY.xmlns:"Cust-Account-Full";
+		
+		--DECLARE OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER REFERENCE TO OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER;
+		--DECLARE outrefbody1 REFERENCE TO OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.SOURCE=inrefheader.xmlns:SOURCE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.UBSCOMP=inrefheader.xmlns:UBSCOMP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.MSGID=inrefheader.xmlns:MSGID;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.CORRELID =inrefheader.xmlns:CORRELID ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.USERID=inrefheader.xmlns:USERID ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.ENTITY=inrefheader.xmlns:ENTITY; 
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.BRANCH=inrefheader.xmlns:BRANCH ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.SERVICE=inrefheader.xmlns:SERVICE ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.OPERATION=inrefheader.xmlns:OPERATION ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.DESTINATION=inrefheader.xmlns:DESTINATION;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.FUNCTIONID=inrefheader.xmlns:FUNCTIONID ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.ACTION=inrefheader.xmlns:ACTION ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_HEADER.MSGSTAT=inrefheader.xmlns:MSGSTAT ;
+	
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".BRN=inrefbody.xmlns:BRN; 
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACC=inrefbody.xmlns:ACC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CUSTNO=inrefbody.xmlns:CUSTNO;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACCLS=inrefbody.xmlns:ACCLS;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CCY=inrefbody.xmlns:CCY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CUSTNAME=inrefbody.xmlns:CUSTNAME;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACCLSTYP=inrefbody.xmlns:ACCLSTYP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ADESC=inrefbody.xmlns:ADESC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACSTATNODR=inrefbody.xmlns:ACSTATNODR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACSTATNOCR=inrefbody.xmlns:ACSTATNOCR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACSTATSTPAY=inrefbody.xmlns:ACSTATSTPAY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".DORM=inrefbody.xmlns:DORM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACCTYPE=inrefbody.xmlns:ACCTYPE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACCOPENDT=inrefbody.xmlns:ACCOPENDT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ALTACC=inrefbody.xmlns:ALTACC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".FROZEN=inrefbody.xmlns:FROZEN;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ADDRESS_2=inrefbody.xmlns:ADDRESS_2;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ADDRESS_3=inrefbody.xmlns:ADDRESS_3;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".POSTALLOWED=inrefbody.xmlns:POSTALLOWED;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".TRKREC=inrefbody.xmlns:TRKREC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".REFREQ=inrefbody.xmlns:REFREQ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACCSTAT=inrefbody.xmlns:ACCSTAT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".STATSINCE=inrefbody.xmlns:STATSINCE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".INHERITREP=inrefbody.xmlns:INHERITREP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".AUTOSTATCHANGE=inrefbody.xmlns:AUTOSTATCHANGE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".DORMPRM=inrefbody.xmlns:DORMPRM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".LOC=inrefbody.xmlns:LOC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".MEDIA=inrefbody.xmlns:MEDIA;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CHQBOOK=inrefbody.xmlns:CHQBOOK;
+	
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PASSBOOK=inrefbody.xmlns:PASSBOOK;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CASACC=inrefbody.xmlns:CASACC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".TYOFCHQ=inrefbody.xmlns:TYOFCHQ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ATMDLIM=inrefbody.xmlns:ATMDLIM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ATMDCNTLIM=inrefbody.xmlns:ATMDCNTLIM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".POSPAYAC=inrefbody.xmlns:POSPAYAC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".AUTOREORDERCHKREQ=inrefbody.xmlns:AUTOREORDERCHKREQ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".LODGEBKFAC=inrefbody.xmlns:LODGEBKFAC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ALLWBKPERENTRY=inrefbody.xmlns:ALLWBKPERENTRY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".AUTOPROVREQ=inrefbody.xmlns:AUTOPROVREQ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PROVCCYTYPE=inrefbody.xmlns:PROVCCYTYPE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".DEFRECON=inrefbody.xmlns:DEFRECON;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CONSREQD=inrefbody.xmlns:CONSREQD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".FUNDING=inrefbody.xmlns:FUNDING;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".MOD9RQD=inrefbody.xmlns:MOD9RQD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".NETREQ=inrefbody.xmlns:NETREQ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACSTMTDAY=inrefbody.xmlns:ACSTMTDAY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ATM=inrefbody.xmlns:ATM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACSTMTTYPEP=inrefbody.xmlns:ACSTMTTYPEP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".GENSTMTMV=inrefbody.xmlns:GENSTMTMV;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".DISPIBANINADV=inrefbody.xmlns:DISPIBANINADV;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACSTMTTYPS=inrefbody.xmlns:ACSTMTTYPS;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".GENSTMTMV2=inrefbody.xmlns:GENSTMTMV2;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACSTMTTYPE3=inrefbody.xmlns:ACSTMTTYPE3;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".GENSTMTMV3=inrefbody.xmlns:GENSTMTMV3;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".FLGEXCLRVRTRANS=inrefbody.xmlns:FLGEXCLRVRTRANS;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PREVSTMTDT=inrefbody.xmlns:PREVSTMTDT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PREVSTMTBAL=inrefbody.xmlns:PREVSTMTBAL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PREVSTMTNO=inrefbody.xmlns:PREVSTMTNO;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".SWPTYPE=inrefbody.xmlns:SWPTYPE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".REGCCAVL=inrefbody.xmlns:REGCCAVL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".REGDAPP=inrefbody.xmlns:REGDAPP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".REGDPER=inrefbody.xmlns:REGDPER;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PRDLST=inrefbody.xmlns:PRDLST;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".TXNLST=inrefbody.xmlns:TXNLST;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".SPCONDLST=inrefbody.xmlns:SPCONDLST;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".SPCONDTXN=inrefbody.xmlns:SPCONDTXN;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ODREQ=inrefbody.xmlns:ODREQ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".DAYLIGHTLIMIT=inrefbody.xmlns:DAYLIGHTLIMIT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ESCROWTRN=inrefbody.xmlns:ESCROWTRN;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".ACCOUNTAUTOCLOSED=inrefbody.xmlns:ACCOUNTAUTOCLOSED;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CRS_STST_REQD=inrefbody.xmlns:CRS_STST_REQD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".MT110_RECON_REQD=inrefbody.xmlns:MT110_RECON_REQD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PROJACC=inrefbody.xmlns:PROJACC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".PRIVATE_CUSTOMER=inrefbody.xmlns:PRIVATE_CUSTOMER;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".DFLT_WAIVER=inrefbody.xmlns:DFLT_WAIVER;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".AUTO_DEBIT_CARD_REQUEST=inrefbody.xmlns:AUTO_DEBIT_CARD_REQUEST;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".AUTO_CHEQUE_BOOK_REQ=inrefbody.xmlns:AUTO_CHEQUE_BOOK_REQ;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".NSFBLKSTAT=inrefbody.xmlns:NSFBLKSTAT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".DROVD=inrefbody.xmlns:DROVD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CROVD=inrefbody.xmlns:CROVD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".SPL_AC_GEN=inrefbody.xmlns:SPL_AC_GEN;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".MAKER=inrefbody.xmlns:MAKER;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".MAKERSTAMP=inrefbody.xmlns:MAKERSTAMP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CHECKER=inrefbody.xmlns:CHECKER;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CHECKERSTAMP=inrefbody.xmlns:CHECKERSTAMP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".MODNO=inrefbody.xmlns:MODNO;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".TXNSTAT=inrefbody.xmlns:TXNSTAT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".AUTHSTAT=inrefbody.xmlns:AUTHSTAT;
+ 		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Provision-Main".PRVACCUI=inrefbody.xmlns:"Provision-Main".xmlns:PRVACCUI;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Interim-Details".INTRMSTMTCNT=inrefbody.xmlns:"Interim-Details".xmlns:INTRMSTMTCNT;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.ACSTATUS=inrefbody.xmlns:Acstatuslines.xmlns:ACSTATUS;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.DRHOLINE=inrefbody.xmlns:Acstatuslines.xmlns:DRHOLINE;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.CRHOLINE=inrefbody.xmlns:Acstatuslines.xmlns:CRHOLINE;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.CRCBLINE=inrefbody.xmlns:Acstatuslines.xmlns:CRCBLINE;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.DRCBLINE=inrefbody.xmlns:Acstatuslines.xmlns:DRCBLINE;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.DRGL=inrefbody.xmlns:Acstatuslines.xmlns:DRGL;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.CRGL=inrefbody.xmlns:Acstatuslines.xmlns:CRGL;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Acstatuslines.DESC=inrefbody.xmlns:Acstatuslines.xmlns:DESC;
+	
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.CALCACC=inrefbody.xmlns:Intdetails.xmlns:CALCACC;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".IntdetailsBOOKACC=inrefbody.xmlns:Intdetails.xmlns:BOOKACC;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.HASI=inrefbody.xmlns:Intdetails.xmlns:HASIS;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.INTSTARTDT=inrefbody.xmlns:Intdetails.xmlns:INTSTARTDT;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.BOOKACCBRN=inrefbody.xmlns:Intdetails.xmlns:BOOKACCBRN;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.DRCRADV=inrefbody.xmlns:Intdetails.xmlns:DRCRADV;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.CHGBOOKACCBRN=inrefbody.xmlns:Intdetails.xmlns:CHGBOOKACCBRN;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.CHGBOOKACC=inrefbody.xmlns:Intdetails.xmlns:CHGBOOKACC;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.CHGSTARTDT=inrefbody.xmlns:Intdetails.xmlns:CHGSTARTDT;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.BRN=inrefbody.xmlns:Intdetails.xmlns:BRN;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Intdetails.ACC=inrefbody.xmlns:Intdetails.xmlns:ACC;
+	
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Tddetails.AUTOROLL=inrefbody.xmlns:Tddetails.xmlns:AUTOROLL;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Tddetails.CLONMAT=inrefbody.xmlns:Tddetails.xmlns:CLONMAT;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Tddetails.MOVINTUNCLM=inrefbody.xmlns:Tddetails.xmlns:MOVINTUNCLM;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Tddetails.ROLLTYPE=inrefbody.xmlns:Tddetails.xmlns:ROLLTYPE;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Tddetails.MOVPRIUNCLM=inrefbody.xmlns:Tddetails.xmlns:MOVPRIUNCLM;
+ 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Tddetails.INTSTDT=inrefbody.xmlns:Tddetails.xmlns:INTSTDT;
+	
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LCY=inrefbody.xmlns:"Amount-Dates".xmlns:LCY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY=inrefbody.xmlns:"Amount-Dates".xmlns:ACY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".DR_INT_DUE=inrefbody.xmlns:"Amount-Dates".xmlns:DR_INT_DUE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".CHG_DUE=inrefbody.xmlns:"Amount-Dates".xmlns:CHG_DUE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".WITHDRAWABLE_UNCOLLED_FUND=inrefbody.xmlns:"Amount-Dates".xmlns:WITHDRAWABLE_UNCOLLED_FUND;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_OPENING_BAL=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_OPENING_BAL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LCY_OPENING_BAL=inrefbody.xmlns:"Amount-Dates".xmlns:LCY_OPENING_BAL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".CY_TODAY_TOVER_DR=inrefbody.xmlns:"Amount-Dates".xmlns:CY_TODAY_TOVER_DR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LCY_TODAY_TOVER_DR=inrefbody.xmlns:"Amount-Dates".xmlns:LCY_TODAY_TOVER_DR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_TODAY_TOVER_CR=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_TODAY_TOVER_CR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LCY_TODAY_TOVER_CR=inrefbody.xmlns:"Amount-Dates".xmlns:LCY_TODAY_TOVER_CR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_TANK_CR=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_TANK_CR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_TANK_DR=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_TANK_DR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LCY_TANK_CR=inrefbody.xmlns:"Amount-Dates".xmlns:LCY_TANK_CR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LCY_TANK_DR=inrefbody.xmlns:"Amount-Dates".xmlns:LCY_TANK_DR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_TANK_UNCOLLECTED=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_TANK_UNCOLLECTED;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_CURR_BALANCE=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_CURR_BALANCE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LCY_CURR_BALANCE=inrefbody.xmlns:"Amount-Dates".xmlns:LCY_CURR_BALANCE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_BLOCKED_AMOUNT=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_BLOCKED_AMOUNT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_AVL_BAL=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_AVL_BAL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNAUTH_DR=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNAUTH_DR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNAUTH_TANK_DR=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNAUTH_TANK_DR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNAUTH_CR=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNAUTH_CR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNAUTH_TANK_CR=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNAUTH_TANK_CR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNAUTH_UNCOLLECTED=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNAUTH_UNCOLLECTED;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNAUTH_TANK_UNCOLLECTED=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNAUTH_TANK_UNCOLLECTED;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_ACCRUED_DR_IC=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_ACCRUED_DR_IC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_ACCRUED_CR_IC=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_ACCRUED_CR_IC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".DATE_LAST_CR_ACTIVITY=inrefbody.xmlns:"Amount-Dates".xmlns:DATE_LAST_CR_ACTIVITY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".DATE_LAST_DR_ACTIVITY=inrefbody.xmlns:"Amount-Dates".xmlns:DATE_LAST_DR_ACTIVITY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".DATE_LAST_DR=inrefbody.xmlns:"Amount-Dates".xmlns:DATE_LAST_DR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".DATE_LAST_CR=inrefbody.xmlns:"Amount-Dates".xmlns:DATE_LAST_CR;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNCOLLECTED=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNCOLLECTED;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".AMTAVL=inrefbody.xmlns:"Amount-Dates".xmlns:AMTAVL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".DIS_UNUTILIZED_AMT=inrefbody.xmlns:"Amount-Dates".xmlns:DIS_UNUTILIZED_AMT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".DIS_TOT_AVL_AMOUNT=inrefbody.xmlns:"Amount-Dates".xmlns:DIS_TOT_AVL_AMOUNT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ACY_UNAUTH=inrefbody.xmlns:"Amount-Dates".xmlns:ACY_UNAUTH;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".UTILIZED_AMT=inrefbody.xmlns:"Amount-Dates".xmlns:UTILIZED_AMT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".LIMIT_AMOUNT=inrefbody.xmlns:"Amount-Dates".xmlns:LIMIT_AMOUNT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".ILM_SWEEP_BAL=inrefbody.xmlns:"Amount-Dates".xmlns:ILM_SWEEP_BAL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".SWEEP_ELIG_BAL=inrefbody.xmlns:"Amount-Dates".xmlns:SWEEP_ELIG_BAL;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".PRINC_OUTSTAND=inrefbody.xmlns:"Amount-Dates".xmlns:PRINC_OUTSTAND;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".INT_OUTSTAND=inrefbody.xmlns:"Amount-Dates".xmlns:INT_OUTSTAND;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".CHG_OUTSTAND=inrefbody.xmlns:"Amount-Dates".xmlns:CHG_OUTSTAND;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Amount-Dates".AMTDUE=inrefbody.xmlns:"Amount-Dates".xmlns:AMTDUE;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".Noticepref=inrefbody.xmlns:Noticepref;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Cust-Acc-Check"=inrefbody.xmlns:"Cust-Acc-Check";
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Icccspcn".BRNCD=inrefbody.xmlns:"Custacc-Icccspcn".xmlns:BRNCD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Icccspcn".ACCNO=inrefbody.xmlns:"Custacc-Icccspcn".xmlns:ACCNO;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Icccspcn".BRN=inrefbody.xmlns:"Custacc-Icchspcn".xmlns:BRN;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Icccspcn".ACC=inrefbody.xmlns:"Custacc-Icchspcn".xmlns:ACC;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Iccinstr".BRN=inrefbody.xmlns:"Custacc-Iccinstr".xmlns:BRN;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Iccinstr".ACC=inrefbody.xmlns:"Custacc-Iccinstr".xmlns:ACC;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CustAcc.BRN=inrefbody.xmlns:CustAcc.xmlns:BRN;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CustAcc.ACC=inrefbody.xmlns:CustAcc.xmlns:ACC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CustAcc.Misdetails.POOLCD=inrefbody.xmlns:CustAcc.xmlns:Misdetails.xmlns:POOLCD;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".CustAcc.Misdetails.REFRTTYPE=inrefbody.xmlns:CustAcc.xmlns:Misdetails.xmlns:REFRTTYPE;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Sicdiary"=inrefbody.xmlns:"Custacc-Sicdiary";
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Stccusbl".BRN=inrefbody.xmlns:"Custacc-Stccusbl".xmlns:BRN;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[1].FLDNAM=inrefbody.xmlns:UDFDETAILS[1].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[2].FLDNAM=inrefbody.xmlns:UDFDETAILS[2].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[3].FLDNAM=inrefbody.xmlns:UDFDETAILS[3].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[4].FLDNAM=inrefbody.xmlns:UDFDETAILS[4].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[5].FLDNAM=inrefbody.xmlns:UDFDETAILS[5].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[6].FLDNAM=inrefbody.xmlns:UDFDETAILS[6].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[7].FLDNAM=inrefbody.xmlns:UDFDETAILS[7].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[8].FLDNAM=inrefbody.xmlns:UDFDETAILS[8].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[9].FLDNAM=inrefbody.xmlns:UDFDETAILS[9].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[10].FLDNAM=inrefbody.xmlns:UDFDETAILS[10].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[11].FLDNAM=inrefbody.xmlns:UDFDETAILS[11].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[12].FLDNAM=inrefbody.xmlns:UDFDETAILS[12].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[13].FLDNAM=inrefbody.xmlns:UDFDETAILS[13].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[14].FLDNAM=inrefbody.xmlns:UDFDETAILS[14].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[15].FLDNAM=inrefbody.xmlns:UDFDETAILS[15].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[16].FLDNAM=inrefbody.xmlns:UDFDETAILS[16].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[17].FLDNAM=inrefbody.xmlns:UDFDETAILS[17].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[18].FLDNAM=inrefbody.xmlns:UDFDETAILS[18].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[19].FLDNAM=inrefbody.xmlns:UDFDETAILS[19].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[20].FLDNAM=inrefbody.xmlns:UDFDETAILS[20].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[21].FLDNAM=inrefbody.xmlns:UDFDETAILS[21].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[22].FLDNAM=inrefbody.xmlns:UDFDETAILS[22].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[23].FLDNAM=inrefbody.xmlns:UDFDETAILS[23].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[24].FLDNAM=inrefbody.xmlns:UDFDETAILS[24].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[25].FLDNAM=inrefbody.xmlns:UDFDETAILS[25].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[26].FLDNAM=inrefbody.xmlns:UDFDETAILS[26].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[27].FLDNAM=inrefbody.xmlns:UDFDETAILS[27].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[28].FLDNAM=inrefbody.xmlns:UDFDETAILS[28].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[29].FLDNAM=inrefbody.xmlns:UDFDETAILS[29].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[30].FLDNAM=inrefbody.xmlns:UDFDETAILS[30].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[31].FLDNAM=inrefbody.xmlns:UDFDETAILS[31].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[32].FLDNAM=inrefbody.xmlns:UDFDETAILS[32].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[33].FLDNAM=inrefbody.xmlns:UDFDETAILS[33].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[34].FLDNAM=inrefbody.xmlns:UDFDETAILS[34].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[35].FLDNAM=inrefbody.xmlns:UDFDETAILS[35].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[36].FLDNAM=inrefbody.xmlns:UDFDETAILS[36].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[37].FLDNAM=inrefbody.xmlns:UDFDETAILS[37].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[38].FLDNAM=inrefbody.xmlns:UDFDETAILS[38].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[39].FLDNAM=inrefbody.xmlns:UDFDETAILS[39].xmlns:FLDNAM;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full".UDFDETAILS[40].FLDNAM=inrefbody.xmlns:UDFDETAILS[40].xmlns:FLDNAM;
+	
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".ACBRN1=inrefbody.xmlns:"Acc-Svcacsig".xmlns:ACBRN1;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".ACTNO=inrefbody.xmlns:"Acc-Svcacsig".xmlns:ACTNO;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".ACDESC=inrefbody.xmlns:"Acc-Svcacsig".xmlns:ACDESC;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".ACCMSG=inrefbody.xmlns:"Acc-Svcacsig".xmlns:ACCMSG;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".MINNOSIG=inrefbody.xmlns:"Acc-Svcacsig".xmlns:MINNOSIG;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".ACCCY=inrefbody.xmlns:"Acc-Svcacsig".xmlns:ACCCY;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".CUST_ID=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:CUST_ID;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".RELATIONTYP=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:RELATIONTYP;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".SIGID=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:SIGID;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".SIGMSG=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:SIGMSG;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".SIGTYPE=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:SIGTYPE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".APPROVLIMIT=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:APPROVLIMIT;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".SIGNAME=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:SIGNAME;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Svcacsig".SOLOSIG=inrefbody.xmlns:"Acc-Svcacsig".xmlns:Accsigdetails.xmlns:SOLOSIG;
+	
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Iccintpo".BRANCH_CODE=inrefbody.xmlns:"Custacc-Iccintpo".xmlns:BRANCH_CODE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Iccintpo".CUST_AC_NO=inrefbody.xmlns:"Custacc-Iccintpo".xmlns:CUST_AC_NO;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Custacc-Iccintpo".CCY=inrefbody.xmlns:"Custacc-Iccintpo".xmlns:CCY;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Customer-Acc".BRANCH_CODE=inrefbody.xmlns:"Customer-Acc".xmlns:BRANCH_CODE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Customer-Acc".CUST_AC_NO=inrefbody.xmlns:"Customer-Acc".xmlns:CUST_AC_NO;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Sttms-Cust-Acc-Swp".BRANCH_CODE=inrefbody.xmlns:"Sttms-Cust-Acc-Swp".xmlns:BRANCH_CODE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Sttms-Cust-Acc-Swp".CUST_AC_NO=inrefbody.xmlns:"Sttms-Cust-Acc-Swp".xmlns:CUST_AC_NO;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Chnl".BRANCH_CODE=inrefbody.xmlns:"Acc-Chnl".xmlns:BRANCH_CODE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY."Cust-Account-Full"."Acc-Chnl".CUST_AC_NO=inrefbody.xmlns:"Acc-Chnl".xmlns:CUST_AC_NO;
+		
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY.FCUBS_WARNING_RESP.WARNING.WCODE =   InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_BODY.xmlns:FCUBS_WARNING_RESP.xmlns:WARNING.xmlns:WCODE;
+		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY.FCUBS_WARNING_RESP.WARNING.WDESC =   InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_BODY.xmlns:FCUBS_WARNING_RESP.xmlns:WARNING.xmlns:WDESC;
+	
+	
+	
+	
+	
+	
+	
+	END;
+END MODULE;
