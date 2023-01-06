@@ -1,13 +1,19 @@
+
+
 BROKER SCHEMA com.schema.BankAccountDetails
+Path "MCB_EXCEPTION_AND_DB_LOGS";
+
 
 DECLARE soap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
 DECLARE ns1 NAMESPACE 'http://fcubs.ofss.com/service/FCUBSAccService';
+
 
 CREATE COMPUTE MODULE BankAccoutDetails_Compute
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
 		-- CALL CopyMessageHeaders();
 		 CALL CopyEntireMessage();
+		
 		RETURN TRUE;
 	END;
 
@@ -23,7 +29,15 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute
 
 	CREATE PROCEDURE CopyEntireMessage() BEGIN
 		
-		
+	--	DBLog --
+	    
+	    DECLARE payloadin BLOB ASBITSTREAM(InputRoot.JSON.Data ENCODING 546  CCSID 1208);
+	    DECLARE CHANNELREQUEST CHARACTER CAST(payloadin AS CHARACTER CCSID 1208);
+	    --DECLARE TIME_STAMP TIMESTAMP;
+	    DECLARE MESSAGE_ID CHARACTER InputLocalEnvironment.Destination.HTTP.RequestIdentifier;
+	    DECLARE MESSAGE_TYPE CHARACTER FIELDNAME(InputRoot.*[3]);
+	    CALL esqldblogpro(ApplicationLabel,MessageFlowLabel,MESSAGE_ID,'CHANNEL REQUEST',CHANNELREQUEST,CURRENT_TIMESTAMP);
+	      
 		SET OutputRoot.XMLNSC.soap:Envelope.(XMLNSC.NamespaceDecl)xmlns:soap=soap;
 		SET OutputRoot.XMLNSC.soap:Envelope.soap:Header.(XMLNSC.NamespaceDecl)=NULL;
 		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.(XMLNSC.Attribute)xmlns:ns1=ns1;
@@ -44,7 +58,6 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute
 		
 		SET OutputRoot.XMLNSC.soap:Envelope.soap:Body.ns1:QUERYCUSTACC_IOFS_REQ.ns1:FCUBS_BODY.ns1:"Cust-Account-IO".ns1:ACC=0002770250011;
 		
-	--	Set OutputRoot.XMLNSC.SOAP.Body= InputRoot.JSON.Data;
 	
 	END;
 END MODULE;

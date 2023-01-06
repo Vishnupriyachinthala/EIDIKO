@@ -3,6 +3,7 @@
 	<name>AccountService</name>
 	<comment></comment>
 	<projects>
+		<project>MCB_EXCEPTION_AND_DB_LOGS</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

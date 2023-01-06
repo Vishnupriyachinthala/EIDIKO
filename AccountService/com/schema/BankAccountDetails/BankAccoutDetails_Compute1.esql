@@ -1,5 +1,7 @@
 BROKER SCHEMA com.schema.BankAccountDetails
 
+Path "MCB_EXCEPTION_AND_DB_LOGS";
+
 DECLARE S NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
 DECLARE xmlns NAMESPACE 'http://fcubs.ofss.com/service/FCUBSAccService';
 
@@ -22,6 +24,17 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute1
 	END;
 
 	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		
+		--DBlog--
+		  DECLARE payloadinhost BLOB ASBITSTREAM(InputRoot.SOAP.*:Body);
+		  DECLARE host_req CHARACTER CAST(payloadinhost AS CHARACTER CCSID 1208);
+		 -- SET shared.HOST_REQ=host_req;
+		  		  DECLARE payloadouthost BLOB ASBITSTREAM(OutputRoot.JSON.Data);		
+		  		    DECLARE host_res CHARACTER CAST(payloadouthost AS CHARACTER CCSID 1208);
+		  --SET shared.HOST_RES = host_res;
+		  
+		  
+		 
 		DECLARE inrefheader REFERENCE TO InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_HEADER;
 		DECLARE inrefbody REFERENCE TO InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_BODY.xmlns:"Cust-Account-Full";
 		
@@ -301,7 +314,11 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute1
 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY.FCUBS_WARNING_RESP.WARNING.WCODE =   InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_BODY.xmlns:FCUBS_WARNING_RESP.xmlns:WARNING.xmlns:WCODE;
 		SET OutputRoot.JSON.Data.Res.QUERYCUSTACC_IOFS_RES.FCUBS_BODY.FCUBS_WARNING_RESP.WARNING.WDESC =   InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_BODY.xmlns:FCUBS_WARNING_RESP.xmlns:WARNING.xmlns:WDESC;
 	
-	
+		DECLARE Payloadchares BLOB ASBITSTREAM(OutputRoot.JSON.Data.Res CCSID 1208);
+		DECLARE CHANNELRESPONSE CHARACTER CAST(Payloadchares AS CHARACTER CCSID 1208 ENCODING 546);
+		
+		DECLARE MESSAGE_ID CHARACTER OutputLocalEnvironment.Destination.HTTP.RequestIdentifier;
+		 CALL esqldblogpro(ApplicationLabel,MessageFlowLabel,MESSAGE_ID,'CHANNEL RESPONSE',CHANNELRESPONSE,CURRENT_TIMESTAMP);
 	
 	
 	
