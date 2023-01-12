@@ -1,7 +1,7 @@
 
 
 BROKER SCHEMA com.schema.BankAccountDetails
-Path "MCB_EXCEPTION_AND_DB_LOGS";
+Path MCB_EXCEPTION_AND_DB_LOGS,MCB_EXCEPTION_AND_DB_LOGS;
 
 
 DECLARE soap NAMESPACE 'http://schemas.xmlsoap.org/soap/envelope/';
@@ -29,14 +29,18 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute
 
 	CREATE PROCEDURE CopyEntireMessage() BEGIN
 		
-	--	DBLog --
+	-- DBLog --
 	    
-	    DECLARE payloadin BLOB ASBITSTREAM(InputRoot.JSON.Data ENCODING 546  CCSID 1208);
-	    DECLARE CHANNELREQUEST CHARACTER CAST(payloadin AS CHARACTER CCSID 1208);
-	    --DECLARE TIME_STAMP TIMESTAMP;
-	    DECLARE MESSAGE_ID CHARACTER InputLocalEnvironment.Destination.HTTP.RequestIdentifier;
-	    DECLARE MESSAGE_TYPE CHARACTER FIELDNAME(InputRoot.*[3]);
-	    CALL esqldblogpro(ApplicationLabel,MessageFlowLabel,MESSAGE_ID,'CHANNEL REQUEST',CHANNELREQUEST,CURRENT_TIMESTAMP);
+--	    DECLARE payloadin BLOB ASBITSTREAM(InputRoot.JSON.Data ENCODING 546  CCSID 1208);
+--	    DECLARE CHANNELREQUEST CHARACTER CAST(payloadin AS CHARACTER CCSID 1208);
+--	    --DECLARE TIME_STAMP TIMESTAMP;
+--	    DECLARE MESSAGE_ID CHARACTER InputLocalEnvironment.Destination.HTTP.RequestIdentifier;
+--	    DECLARE MESSAGE_TYPE CHARACTER FIELDNAME(InputRoot.*[3]);
+--	    
+--	    DECLARE encry CHARACTER;
+--	    CALL Encryption (CHANNELREQUEST,'vishnu')INTO encry;
+--	    CALL MCB_EXCEPTION_AND_DB_LOGS.esqldblogpro(ApplicationLabel,MessageFlowLabel,MESSAGE_ID,'CHANNEL REQUEST',encry,CURRENT_TIMESTAMP);
+	   
 	      
 		SET OutputRoot.XMLNSC.soap:Envelope.(XMLNSC.NamespaceDecl)xmlns:soap=soap;
 		SET OutputRoot.XMLNSC.soap:Envelope.soap:Header.(XMLNSC.NamespaceDecl)=NULL;
@@ -61,3 +65,6 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute
 	
 	END;
 END MODULE;
+CREATE PROCEDURE Encryption ( IN Data CHARACTER, IN Key CHARACTER) RETURNS CHARACTER
+LANGUAGE JAVA
+EXTERNAL NAME "encryptionDecryption.EncryptionDecryption.encrypt";

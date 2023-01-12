@@ -1,0 +1,50 @@
+BROKER SCHEMA com.schema.jms
+
+
+CREATE COMPUTE MODULE simpleflow_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		-- CALL CopyMessageHeaders();
+		CALL CopyEntireMessage();
+		RETURN TRUE;
+	END;
+
+	CREATE PROCEDURE CopyMessageHeaders() BEGIN
+		DECLARE I INTEGER 1;
+		DECLARE J INTEGER;
+		SET J = CARDINALITY(InputRoot.*[]);
+		WHILE I < J DO
+			SET OutputRoot.*[I] = InputRoot.*[I];
+			SET I = I + 1;
+		END WHILE;
+	END;
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		
+		DECLARE store ROW;
+		
+		SET OutputRoot.XMLNSC=  InputRoot.XMLNSC;
+		
+		DECLARE inref BLOB ASBITSTREAM(InputRoot.XMLNSC ENCODING 546 CCSID 1208);
+		DECLARE ch_req CHARACTER CAST(inref AS CHAR CCSID 1208);
+		
+		DECLARE mid CHARACTER InputRoot.JMSTransport.Transport_Folders.Header_Values.JMSMessageID;
+		
+		DECLARE tim TIMESTAMP CURRENT_TIMESTAMP;
+		
+		DECLARE mtype CHARACTER FIELDTYPE(InputRoot.*[3]);
+		
+		DECLARE HO_RES  CHARACTER 'NULL';
+		
+		DECLARE HO_REQ CHARACTER 'NULL';
+		
+		DECLARE payloadrestout BLOB ASBITSTREAM(OutputRoot.XMLNSC ENCODING 546 CCSID 1208);
+		DECLARE cha_res CHARACTER CAST(payloadrestout AS CHAR CCSID 1208);
+		
+		call DB_StoredProcedure.PROCEDURE1(ApplicationLabel,MessageFlowLabel,ch_req,tim,mid,mtype,HO_RES,HO_REQ,cha_res);
+		
+		
+		
+		
+	END;
+END MODULE;

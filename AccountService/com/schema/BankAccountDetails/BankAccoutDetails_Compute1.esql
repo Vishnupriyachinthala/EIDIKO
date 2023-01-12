@@ -26,14 +26,23 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute1
 	CREATE PROCEDURE CopyEntireMessage() BEGIN
 		
 		--DBlog--
-		  DECLARE payloadinhost BLOB ASBITSTREAM(InputRoot.SOAP.*:Body);
-		  DECLARE host_req CHARACTER CAST(payloadinhost AS CHARACTER CCSID 1208);
-		 -- SET shared.HOST_REQ=host_req;
-		  		  DECLARE payloadouthost BLOB ASBITSTREAM(OutputRoot.JSON.Data);		
-		  		    DECLARE host_res CHARACTER CAST(payloadouthost AS CHARACTER CCSID 1208);
+--		  DECLARE payloadinhost BLOB ASBITSTREAM(InputRoot.SOAP.*:Body);
+--		  DECLARE host_req CHARACTER CAST(payloadinhost AS CHARACTER CCSID 1208);
+--		 -- SET shared.HOST_REQ=host_req;
+--		  		  DECLARE payloadouthost BLOB ASBITSTREAM(OutputRoot.JSON.Data);		
+--		  		    DECLARE host_res CHARACTER CAST(payloadouthost AS CHARACTER CCSID 1208);
 		  --SET shared.HOST_RES = host_res;
 		  
-		  
+		  --decrypt--
+						  	
+				--	DECLARE ref REFERENCE TO InputRoot.JSON.Data;
+				--	DECLARE AccDetails CHARACTER CAST(ASBITSTREAM(ref CCSID InputRoot.Properties.CodedCharSetId) AS CHARACTER CCSID InputRoot.Properties.CodedCharSetId ENCODING InputRoot.Properties.Encoding);
+				--	DECLARE encry,decry CHARACTER;sss
+				----	CALL Encryption (AccDetails,'vishnu')INTO encry;
+				----	SET OutputRoot.JSON.Data.Res.encrypt = encry;
+				--	CALL Decryption (encry,'vishnu')INTO decry;
+				--	SET OutputRoot.JSON.Data.Res.decrypt = decry;
+				--	
 		 
 		DECLARE inrefheader REFERENCE TO InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_HEADER;
 		DECLARE inrefbody REFERENCE TO InputRoot.XMLNSC.S:Envelope.S:Body.S:QUERYCUSTACC_IOFS_RES.xmlns:FCUBS_BODY.xmlns:"Cust-Account-Full";
@@ -318,7 +327,7 @@ CREATE COMPUTE MODULE BankAccoutDetails_Compute1
 		DECLARE CHANNELRESPONSE CHARACTER CAST(Payloadchares AS CHARACTER CCSID 1208 ENCODING 546);
 		
 		DECLARE MESSAGE_ID CHARACTER OutputLocalEnvironment.Destination.HTTP.RequestIdentifier;
-		 CALL esqldblogpro(ApplicationLabel,MessageFlowLabel,MESSAGE_ID,'CHANNEL RESPONSE',CHANNELRESPONSE,CURRENT_TIMESTAMP);
+		 CALL MCB_EXCEPTION_AND_DB_LOGS.esqldblogpro(ApplicationLabel,MessageFlowLabel,MESSAGE_ID,'CHANNEL RESPONSE',CHANNELRESPONSE,CURRENT_TIMESTAMP);
 	
 	
 	

@@ -1,0 +1,50 @@
+BROKER SCHEMA com.schema.jms
+
+
+CREATE COMPUTE MODULE simpleflow_Compute1
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+		
+		 CALL CopyEntireMessage();
+		RETURN TRUE;
+	END;
+
+	
+
+	CREATE PROCEDURE CopyEntireMessage() BEGIN
+		
+		DECLARE MID CHARACTER InputRoot.JMSTransport.Transport_Folders.Header_Values.JMSMessageID;
+		
+		DECLARE mtype CHARACTER FIELDNAME(InputRoot.*[3]);
+		
+	--	DECLARE tim TIMESTAMP CURRENT_TIMESTAMP;
+		
+		DECLARE exc REFERENCE TO InputExceptionList.*[1];
+		DECLARE FILE_E CHARACTER; 
+		DECLARE LINE_E CHARACTER;
+		DECLARE NUMBER_E CHARACTER;
+		DECLARE Text CHARACTER;
+		
+		WHILE LASTMOVE(exc) DO
+			MOVE exc LASTCHILD;
+			
+			IF exc.Number is not null THEN
+				
+				SET FILE_E = exc.File;
+				SET LINE_E = exc.Line;
+				SET NUMBER_E = exc.Number;
+				SET Text = exc.Text;	
+				
+			END IF;
+	
+		END WHILE;
+		SET OutputRoot.XMLNSC.Exceptiondetails.File = FILE_E;
+		SET OutputRoot.XMLNSC.Exceptiondetails.Line = LINE_E;
+		--SET OutputRoot.XMLNSC.Exceptiondetails.Type = Type;
+		--SET OutputRoot.XMLNSC.Exceptiondetails.Label = Label;
+		SET OutputRoot.XMLNSC.Exceptiondetails.Number = NUMBER_E;
+		SET OutputRoot.XMLNSC.Exceptiondetails.Text = Text;
+		
+		call DB_StoredProcedure.EXCEPTION1(ApplicationLabel,MessageFlowLabel,MID,mtype,FILE_E,LINE_E,NUMBER_E,Text);
+	END;
+END MODULE;
